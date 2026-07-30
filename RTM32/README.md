@@ -6,7 +6,7 @@
 
 **Instrucciones:**  
 \* Mnemónico: \`SLL\`  
-\* Operadores: \`rs (registro zero), rt (registro fuente), rd (registro destino), aux (cuanto shift)\`  
+\* Operadores: \`rs (registro zero), rt (registro fuente), rd (registro destino), param (cuanto shift)\`  
 \* Instrucción específica de prueba: \`SLL $zero, $t1, $t0, 2\` (Desplazar el contenido del registro \`$t1\` dos posiciones a la izquierda y almacenar el resultado en el registro \`$t0\`).
 
 **Decodificación a Lenguaje de Máquina (Hexadecimal):**  
@@ -14,7 +14,7 @@
 \* **rs** (bits 26-22): \`00000\` (Registro \`$zero\`, no utilizado en el cálculo)  
 \* **rt** (bits 21-17): \`01011\` (Registro fuente \`$t1\` / Registro 11\)  
 \* **rd** (bits 16-12): \`01010\` (Registro destino \`$t0\` / Registro 10\)  
-\* **aux** (bits 11-7): \`00010\` (Valor inmediato 2, cantidad de desplazamientos)  
+\* **param** (bits 11-7): \`00010\` (Valor inmediato 2, cantidad de desplazamientos)  
 \* **X** (bit 6): \`0\` (Bit de control de formato)  
 \* **func** (bits 5-0): \`000000\` (Código asignado a SLL)
 
@@ -68,11 +68,77 @@ registros después del SSL
 
 ### R\[28\]: 0x00000000   R\[29\]: 0x00000000   R\[30\]: 0x00000000   R\[31\]: 0x00000000
 
+# RLC (Rotation Left Circular):
+
+**Instrucciones:**  
+\* Mnemónico: \`RLC\`  
+\* Operadores: \`rt (registro fuente), rd (registro destino), param (cuanto shift)\`  
+\* Instrucción específica de prueba: \`RLC $zero, $a1, $t0, 2\` (Desplazar el contenido del registro \`$a1\` dos posiciones a la izquierda y almacenar el resultado en el registro \`$t0\` y almacenar los bits que salen por la izquierda en la derecha).
+
+**Decodificación a Lenguaje de Máquina (Hexadecimal):**  
+\* **opcode** (bits 31-27): \`00000\` (Tipo R)  
+\* **rs** (bits 26-22): \`00000\` (Registro \`$zero\`, no utilizado en el cálculo)  
+\* **rt** (bits 21-17): \`00101\` (Registro fuente \`$a1\` / Registro 5\)  
+\* **rd** (bits 16-12): \`01010\` (Registro destino \`$t0\` / Registro 10\)  
+\* **param** (bits 11-7): \`00010\` (Valor inmediato 2, cantidad de desplazamientos)  
+\* **X** (bit 6): \`0\` (Bit de control de formato)  
+\* **func** (bits 5-0): \`000001\` (Código asignado a RLC)
+
+**Combinación binaria:** \`0000 0000 0000 1010 1010 0001 0000 0001\`    
+**Representación hexadecimal final:** \`0x000AA101\`
+
+**Precondiciones:**  
+\* El registro \`$t1\` (R11) debe ser cargado manualmente con el valor decimal \`-5\`, que en hexadecimal equivale a \`0x80000005\`.  
+\* El registro \`$t0\` (R10) debe inicializarse en \`0x00000000\` para asegurar que el cambio posterior sea producto de la instrucción y no un residuo de memoria.
+
+**Entrada de Código**  
+s\[0x00\] 0x0016A101
+
+Registros antes del RLC
+
+### \=== General Purpose Registers \===
+
+### R\[ 0\]: 0x00000000   R\[ 1\]: 0x00000000   R\[ 2\]: 0x00000000   R\[ 3\]: 0x00000000
+
+### R\[ 4\]: 0x00000000   R\[ 5\]: 0x80000005   R\[ 6\]: 0x00000000   R\[ 7\]: 0x00000000
+
+### R\[ 8\]: 0x00000000   R\[ 9\]: 0x00000000   R\[10\]: 0x00000000   R\[11\]: 0x00000000
+
+### R\[12\]: 0x00000000   R\[13\]: 0x00000000   R\[14\]: 0x00000000   R\[15\]: 0x00000000
+
+### R\[16\]: 0x00000000   R\[17\]: 0x00000000   R\[18\]: 0x00000000   R\[19\]: 0x00000000
+
+### R\[20\]: 0x00000000   R\[21\]: 0x00000000   R\[22\]: 0x00000000   R\[23\]: 0x00000000
+
+### R\[24\]: 0x00000000   R\[25\]: 0x00000000   R\[26\]: 0x00000000   R\[27\]: 0x00000000
+
+### R\[28\]: 0x00000000   R\[29\]: 0x00000000   R\[30\]: 0x00000000   R\[31\]: 0x00000000
+
+registros después del RLC
+
+### \=== General Purpose Registers \===
+
+### R\[ 0\]: 0x00000000   R\[ 1\]: 0x00000000   R\[ 2\]: 0x00000000   R\[ 3\]: 0x00000000
+
+### R\[ 4\]: 0x00000000   R\[ 5\]: 0x80000005   R\[ 6\]: 0x00000000   R\[ 7\]: 0x00000000
+
+### R\[ 8\]: 0x00000000   R\[ 9\]: 0x00000000   R\[10\]: 0x00000016   R\[11\]: 0x00000000
+
+### R\[12\]: 0x00000000   R\[13\]: 0x00000000   R\[14\]: 0x00000000   R\[15\]: 0x00000000
+
+### R\[16\]: 0x00000000   R\[17\]: 0x00000000   R\[18\]: 0x00000000   R\[19\]: 0x00000000
+
+### R\[20\]: 0x00000000   R\[21\]: 0x00000000   R\[22\]: 0x00000000   R\[23\]: 0x00000000
+
+### R\[24\]: 0x00000000   R\[25\]: 0x00000000   R\[26\]: 0x00000000   R\[27\]: 0x00000000
+
+### R\[28\]: 0x00000000   R\[29\]: 0x00000000   R\[30\]: 0x00000000   R\[31\]: 0x00000000
+
 # SRL (Shift Right Logical)
 
 **Instrucciones:**  
 \* Mnemónico: \`SRL\`  
-\* Operadores: \`rs (registro zero), rt (registro fuente), rd (registro destino), aux (cuanto shift)\`  
+\* Operadores: \`rs (registro zero), rt (registro fuente), rd (registro destino), param (cuanto shift)\`  
 \* Instrucción específica de prueba: \`SRL $zero, $t1, $t0, 2\` (Desplazar el contenido del registro \`$t1\` dos posiciones a la derecha y almacenar el resultado en el registro \`$t0\`).
 
 **Decodificación a Lenguaje de Máquina (Hexadecimal):**  
@@ -80,12 +146,12 @@ registros después del SSL
 \* **rs** (bits 26-22): \`00000\` (Registro \`$zero\`, no utilizado en el cálculo)  
 \* **rt** (bits 21-17): \`01010\` (Registro fuente \`$t1\` / Registro 11\)  
 \* **rd** (bits 16-12): \`01001\` (Registro destino \`$t0\` / Registro 10\)  
-\* **aux** (bits 11-7): \`00010\` (Valor inmediato 2, cantidad de desplazamientos)  
+\* **param** (bits 11-7): \`00010\` (Valor inmediato 2, cantidad de desplazamientos)  
 \* **X** (bit 6): \`0\` (Bit de control de formato)  
-\* **func** (bits 5-0): \`000001\` (Código asignado a SRL)
+\* **func** (bits 5-0): \`000010\` (Código asignado a SRL)
 
-**Combinación binaria:** \`0000 0000 0001 0100 1001 0001 0000 0001\`    
-**Representación hexadecimal final:** \`0x00149101\`
+**Combinación binaria:** \`0000 0000 0001 0100 1001 0001 0000 0010\`    
+**Representación hexadecimal final:** \`0x00149102\`
 
 **Aclaraciones:**  
 	Esta prueba fue directamente después de la prueba de SSL por lo que cambiamos el origen al destino anterior y el destino a R\[9\], al ver R\[9\] y R\[11\] siendo iguales podemos concluir que funcionan correctamente ambas
@@ -138,7 +204,7 @@ Registros después del SRL:
 
 **Instrucciones:**  
 \* Mnemónico: SRA  
-\* Operadores: rs (registro zero), rt (registro fuente), rd (registro destino), aux (cuanto shift)  
+\* Operadores: rs (registro zero), rt (registro fuente), rd (registro destino), param (cuanto shift)  
 \* Instrucción específica de prueba: SRA $zero, $t1, $t0, 1 (Desplazar aritméticamente el contenido del registro $t1 una posición a la derecha y almacenar el resultado en el registro $t0).
 
 **Decodificación a Lenguaje de Máquina (Hexadecimal):**  
@@ -146,12 +212,12 @@ Registros después del SRL:
 \* **rs** (bits 26-22): 00000 (Registro $zero, no utilizado en el cálculo)  
 \* **rt** (bits 21-17): 01011 (Registro fuente $t1 / Registro 11\)  
 \* **rd** (bits 16-12): 01010 (Registro destino $t0 / Registro 10\)  
-\* **aux** (bits 11-7): 00001 (Valor inmediato 1, cantidad de desplazamientos)  
+\* **param** (bits 11-7): 00001 (Valor inmediato 1, cantidad de desplazamientos)  
 \* **X** (bit 6): 0 (Bit de control de formato)  
-\* **func** (bits 5-0): 000010 (Código asignado a SRA)
+\* **func** (bits 5-0): 000011 (Código asignado a SRA)
 
-**Combinación binaria:** \`0000 0000 0001 0110 1010 0000 1000 0010\`    
-**Representación hexadecimal final:** \`0x0016A082\`
+**Combinación binaria:** \`0000 0000 0001 0110 1010 0000 1000 0011\`    
+**Representación hexadecimal final:** \`0x0016A083\`
 
 **Precondiciones:**  
 \* El registro $t1 (R10) debe ser cargado previamente con un valor negativo (por ejemplo, \-4, que en hexadecimal equivale a 0xFFFFFFFC) para poder validar la correcta preservación y extensión del bit de signo.  
@@ -204,7 +270,7 @@ Registros Después del SRA:
 
 **Instrucciones:**  
 \* Mnemónico: SLLR  
-\* Operadores: rs (registro zero), rt (registro fuente), rd (registro destino), aux (cuanto shift)  
+\* Operadores: rs (registro zero), rt (registro fuente), rd (registro destino), param (cuanto shift)  
 \* Instrucción específica de prueba: SLLR $t1, $t0, $t3, 0 (Desplazar lógicamente el contenido del registro $t0 la cantidad de posiciones indicada por el registro $t1 a la izquierda y almacenar el resultado en el registro $t3).
 
 **Decodificación a Lenguaje de Máquina (Hexadecimal):**  
@@ -212,20 +278,19 @@ Registros Después del SRA:
 \* **rs** (bits 26-22): 01011 (Registro $t1/ Registro 11 \- Registro con la cantidad de desplazamientos)  
 \* **rt** (bits 21-17): 01010 (Registro $t0/Registro 10 \- Registro con el valor base a desplazar)  
 \* **rd** (bits 16-12): 01101 (Registro $t3/Registro 13 \- Registro destino del resultado)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
 \* **X** (bit 6): 0  
-\* **func** (bits 5-0): 000011 (Código de función de SLLR)
+\* **func** (bits 5-0): 000100 (Código de función de SLLR)
 
-**Combinación binaria:** \`0000 0010 1101 0100 1101 0000 0000 0011\`    
-**Representación hexadecimal final:** \`0x02D4D003\`
+**Combinación binaria:** \`0000 0010 1101 0100 1101 0000 0000 0100\`    
+**Representación hexadecimal final:** \`0x02D4D004\`
 
 **Precondiciones:**  
 \* El registro $t0 (R10) debe ser cargado previamente con un valor patrón (por ejemplo, 0xFFFFFFFC) para poder verificar cómo se desplazan los bits hacia la izquierda y comprobar el llenado con ceros lógicos.  
 \* El registro $t1 (R11) debe contener el valor con la cantidad de posiciones a desplazar (por ejemplo, 4), permitiendo validar que la ALU tome el desplazamiento de forma dinámica desde un registro fuente y no desde un campo inmediato fijo.  
 \* El registro $t3 (R13) debe inicializarse en 0x00000000 para asegurar que el cambio posterior sea producto de la instrucción y no un residuo de memoria.
 
-**Entrada de Código:**  
-s \[0x08\] 0x02D4D003
+**Entrada de Código:** s \[0x08\] 0x02D4D004
 
 Registros antes del SLLR:
 
@@ -267,11 +332,79 @@ Registros después del SLLR:
 
 ### R\[28\]: 0x00000000   R\[29\]: 0x00000000   R\[30\]: 0x00000000   R\[31\]: 0x00000000
 
+# RLCR (Rotation Left Circular Register)
+
+**Instrucciones:**  
+\* Mnemónico: RLCR  
+\* Operadores: rs (registro zero), rt (registro fuente), rd (registro destino), param (cuanto shift)  
+\* Instrucción específica de prueba: RLCR $t1, $t0, $t3, 0 (Desplazar lógicamente el contenido del registro $t0 la cantidad de posiciones indicada por el registro $t1 a la izquierda y almacenar el resultado en el registro $t3 y que los bits que salgan por la izquierda entran por la derecha).
+
+**Decodificación a Lenguaje de Máquina (Hexadecimal):**  
+\* **opcode** (bits 31-27): 00000 (Tipo R)  
+\* **rs** (bits 26-22): 00101 (Registro $a1/ Registro 5 \- Registro con la cantidad de desplazamientos)  
+\* **rt** (bits 21-17): 01010 (Registro $t0/Registro 10 \- Registro con el valor base a desplazar)  
+\* **rd** (bits 16-12): 01101 (Registro $t3/Registro 13 \- Registro destino del resultado)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **X** (bit 6): 0  
+\* **func** (bits 5-0): 000101 (Código de función de RLCR)
+
+**Combinación binaria:** \`0000 0001 0101 0100 1101 0000 0000 0101\`    
+**Representación hexadecimal final:** \`0x0154D005\`
+
+**Precondiciones:**  
+\* El registro $t0 (R10) debe ser cargado previamente con un valor patrón (por ejemplo, 0xFFFFFFFC) para poder verificar cómo se desplazan los bits hacia la izquierda y comprobar el llenado con ceros lógicos.  
+\* El registro $t1 (R11) debe contener el valor con la cantidad de posiciones a desplazar (por ejemplo, 4), permitiendo validar que la ALU tome el desplazamiento de forma dinámica desde un registro fuente y no desde un campo inmediato fijo.  
+\* El registro $t3 (R13) debe inicializarse en 0x00000000 para asegurar que el cambio posterior sea producto de la instrucción y no un residuo de memoria.
+
+**Entrada de Código:** s \[0x08\] 0x02D4D004
+
+Registros antes del RLCR:
+
+### \=== General Purpose Registers \===
+
+### R\[ 0\]: 0x00000000   R\[ 1\]: 0x00000000   R\[ 2\]: 0x00000000   R\[ 3\]: 0x00000000
+
+### R\[ 4\]: 0x00000000   R\[ 5\]: 0x80000001   R\[ 6\]: 0x00000000   R\[ 7\]: 0x00000000
+
+### R\[ 8\]: 0x00000000   R\[ 9\]: 0x00000000   R\[10\]: 0x80000000   R\[11\]: 0x00000000
+
+### R\[12\]: 0x00000000   R\[13\]: 0x00000000   R\[14\]: 0x00000000   R\[15\]: 0x00000000
+
+### R\[16\]: 0x00000000   R\[17\]: 0x00000000   R\[18\]: 0x00000000   R\[19\]: 0x00000000
+
+### R\[20\]: 0x00000000   R\[21\]: 0x00000000   R\[22\]: 0x00000000   R\[23\]: 0x00000000
+
+### R\[24\]: 0x00000000   R\[25\]: 0x00000000   R\[26\]: 0x00000000   R\[27\]: 0x00000000
+
+### R\[28\]: 0x00000000   R\[29\]: 0x00000000   R\[30\]: 0x00000000   R\[31\]: 0x00000000
+
+Registros después del RLCR:
+
+### \=== General Purpose Registers \===
+
+### R\[ 0\]: 0x00000000   R\[ 1\]: 0x00000000   R\[ 2\]: 0x00000000   R\[ 3\]: 0x00000000
+
+### R\[ 4\]: 0x00000000   R\[ 5\]: 0x80000001   R\[ 6\]: 0x00000000   R\[ 7\]: 0x00000000
+
+### R\[ 8\]: 0x00000000   R\[ 9\]: 0x00000000   R\[10\]: 0x80000000   R\[11\]: 0x00000000
+
+### R\[12\]: 0x00000000   R\[13\]: 0x00000001   R\[14\]: 0x00000000   R\[15\]: 0x00000000
+
+### R\[16\]: 0x00000000   R\[17\]: 0x00000000   R\[18\]: 0x00000000   R\[19\]: 0x00000000
+
+### R\[20\]: 0x00000000   R\[21\]: 0x00000000   R\[22\]: 0x00000000   R\[23\]: 0x00000000
+
+### R\[24\]: 0x00000000   R\[25\]: 0x00000000   R\[26\]: 0x00000000   R\[27\]: 0x00000000
+
+### R\[28\]: 0x00000000   R\[29\]: 0x00000000   R\[30\]: 0x00000000   R\[31\]: 0x00000000
+
+### 
+
 # SRLR (Shift Right Logical Register)
 
 **Instrucciones:**  
 \* Mnemónico: \`SLL\`  
-\* Operadores: \`rs (registro zero), rt (registro fuente), rd (registro destino), aux (cuanto shift)\`  
+\* Operadores: \`rs (registro zero), rt (registro fuente), rd (registro destino), param (cuanto shift)\`  
 \* Instrucción específica de prueba: \`SLL $zero, $t1, $t0, 2\` (Desplazar el contenido del registro \`$t1\` dos posiciones a la izquierda y almacenar el resultado en el registro \`$t0\`).
 
 **Decodificación a Lenguaje de Máquina (Hexadecimal):**  
@@ -279,19 +412,19 @@ Registros después del SLLR:
 \* **rs** (bits 26-22): \`00000\` (Registro \`$zero\`, no utilizado en el cálculo)  
 \* **rt** (bits 21-17): \`01011\` (Registro fuente \`$t1\` / Registro 11\)  
 \* **rd** (bits 16-12): \`01010\` (Registro destino \`$t0\` / Registro 10\)  
-\* **aux** (bits 11-7): \`00010\` (Valor inmediato 2, cantidad de desplazamientos)  
+\* **param** (bits 11-7): \`00010\` (Valor inmediato 2, cantidad de desplazamientos)  
 \* **X** (bit 6): \`0\` (Bit de control de formato)  
-\* **func** (bits 5-0): \`000100\` (Código asignado a SRLR)
+\* **func** (bits 5-0): \`000110\` (Código asignado a SRLR)
 
-**Combinación binaria:** \`0000 0000 0001 0110 1010 0001 0000 0000\`    
-**Representación hexadecimal final:** \`0x0016A100\`
+**Combinación binaria:** \`0000 0000 0001 0110 1010 0001 0000 0110\`    
+**Representación hexadecimal final:** \`0x0016A106\`
 
 **Precondiciones:**  
 \* El registro \`$t1\` (R11) debe ser cargado manualmente con el valor decimal \`5\`, que en hexadecimal equivale a \`0x00000005\`.  
 \* El registro \`$t0\` (R10) debe inicializarse en \`0x00000000\` para asegurar que el cambio posterior sea producto de la instrucción y no un residuo de memoria.
 
 Entrada de Código  
-s\[0x08\] 0x0016A100
+s\[0x08\] 0x0016A106
 
 Registros antes del SRLR:
 
@@ -337,7 +470,7 @@ Registros después del SRLR:
 
 **Instrucciones:**  
 \* Mnemónico: SRAR  
-\* Operadores: rs (registro con shift), rt (registro fuente), rd (registro destino), aux (no utilizado)  
+\* Operadores: rs (registro con shift), rt (registro fuente), rd (registro destino), param (no utilizado)  
 \* Instrucción específica de prueba: SRAR $t1, $t0, $t3, 0 (Desplazar aritméticamente el contenido del registro $t0 la cantidad de posiciones indicada por el registro $t1 a la derecha y almacenar el resultado en el registro $t3).
 
 **Decodificación a Lenguaje de Máquina (Hexadecimal):**  
@@ -345,12 +478,12 @@ Registros después del SRLR:
 \* **rs** (bits 26-22): 01011 (Registro $t1 / Registro 11 \- Registro con la cantidad de desplazamientos)  
 \* **rt** (bits 21-17): 01010 (Registro $t0 / Registro 10 \- Registro con el valor base a desplazar)  
 \* **rd** (bits 16-12): 01101 (Registro $t3 / Registro 13 \- Registro destino del resultado)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
 \* **X** (bit 6): 0  
-\* **func** (bits 5-0): 000101 (Código asignado a SRAR)
+\* **func** (bits 5-0): 000111 (Código asignado a SRAR)
 
-**Combinación binaria:** 0000 0010 1101 0100 1101 0000 0000 0101  
-**Representación hexadecimal final:** 0x02D4D005
+**Combinación binaria:** 0000 0010 1101 0100 1101 0000 0000 0111  
+**Representación hexadecimal final:** 0x02D4D007
 
 **Precondiciones:**  
 \* El registro $t0 (R10) debe ser cargado previamente con un valor negativo patrón (por ejemplo, \-4, que en hexadecimal equivale a 0xFFFFFFFC) para poder validar la correcta preservación y extensión del bit de signo al desplazar a la derecha.  
@@ -400,12 +533,6 @@ Registros después del SRAR:
 
 ### R\[28\]: 0x00000000   R\[29\]: 0x00000000   R\[30\]: 0x00000000   R\[31\]: 0x00000000
 
-# CFS
-
-# CTS
-
-No funcionan
-
 # AND 
 
 **Instrucciones:**  
@@ -418,7 +545,7 @@ No funcionan
 \* **rs** (bits 26-22): 00100 (Registro $a0 / Registro 4 \- 1er argumento)  
 \* **rt** (bits 21-17): 00101 (Registro $a1 / Registro 5 \- 2do argumento)  
 \* **rd** (bits 16-12): 01010 (Registro $t0 / Registro 10 \- Registro destino del resultado)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
 \* **X** (bit 6): 0  
 \* **func** (bits 5-0): 001000 (Código asignado a AND)
 
@@ -485,7 +612,7 @@ Registros después del AND:
 \* **rs** (bits 26-22): 00100 (Registro $a0 / Registro 4 \- 1er argumento)  
 \* **rt** (bits 21-17): 00101 (Registro $a1 / Registro 5 \- 2do argumento)  
 \* **rd** (bits 16-12): 01011 (Registro $t1 / Registro 11 \- Registro destino del resultado)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
 \* **X** (bit 6): 0  
 \* **func** (bits 5-0): 001001 (Código asignado a OR)
 
@@ -555,7 +682,7 @@ Registros después del OR:
 \* **rs** (bits 26-22): 00100 (Registro $a0 / Registro 4 \- 1er argumento)  
 \* **rt** (bits 21-17): 00101 (Registro $a1 / Registro 5 \- 2do argumento)  
 \* **rd** (bits 16-12): 01100 (Registro $t2 / Registro 12 \- Registro destino del resultado)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
 \* **X** (bit 6): 0  
 \* **func** (bits 5-0): 001010 (Código asignado a XOR)
 
@@ -625,7 +752,7 @@ Registros después del XOR:
 \* **rs** (bits 26-22): 00100 (Registro $a0 / Registro 4 \- 1er argumento)  
 \* **rt** (bits 21-17): 00101 (Registro $a1 / Registro 5 \- 2do argumento)  
 \* **rd** (bits 16-12): 01101 (Registro $t3 / Registro 13 \- Registro destino del resultado)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
 \* **X** (bit 6): 0  
 \* **func** (bits 5-0): 001011 (Código asignado a NOR)
 
@@ -683,6 +810,160 @@ Registros después del NOR:
 
 ### R\[28\]: 0x00000000   R\[29\]: 0x00000000   R\[30\]: 0x00000000   R\[31\]: 0x00000000
 
+### 
+
+# ADD 
+
+**Instrucciones:**  
+\* Mnemónico: ADD  
+\* Operadores: rs(registro del 1er valor), rt(registro del 2do valor), rd(registro destino).  
+\* Instrucción específica de prueba: ADD $a1, $a0, $t7 (Suma $a1 con $a0 y guardo el valor en $t7)
+
+**Decodificación a Lenguaje de Máquina (Hexadecimal):**  
+\* **opcode** (bits 31-27): 00000 (Tipo R)  
+\* **rs** (bits 26-22): 00101 (Registro $a1 / Registro 5 \- 1er valor)  
+\* **rt** (bits 21-17): 00100 (Registro $a0 / Registro 4 \- 2do valor)  
+\* **rd** (bits 16-12): 10001 (Registro $t7 / Registro 17 \- registro destino)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **X** (bit 6): 0  
+\* **func** (bits 5-0): 001100 (Código asignado a ADD)
+
+**Combinación binaria:** 0000 0001 0100 1001 0001 0000 0000 1100  
+**Representación hexadecimal final:** 0x0149100C
+
+**Aclaraciones:**  
+\* Fue hecho directamente después de RESTU por eso $t0 y $t1 y $t2 y $t3 y $t4 y $t5 y $t6 tienen un valor guardado y uso la dirección \[0x24\] en vez de \[0x08\]
+
+**Precondiciones:**  
+\* El registro $a0 (R4) fue cargado con 0x01234567  
+\* El registro $a1 (R5)  fue cargado con 0x89ABCDEF  
+\* El registro $t7 (R17) fue limpiado para que esté en 0x00000000
+
+**Entrada de Código:** s \[0x24\] 0x0149100C
+
+Registros antes de ADD:
+
+### RTM32\> r
+
+### \=== General Purpose Registers \===
+
+### R\[ 0\]: 0x00000000   R\[ 1\]: 0x00000000   R\[ 2\]: 0x00000000   R\[ 3\]: 0x00000000
+
+### R\[ 4\]: 0x01234567   R\[ 5\]: 0x89ABCDEF   R\[ 6\]: 0x00000000   R\[ 7\]: 0x00000000
+
+### R\[ 8\]: 0x00000000   R\[ 9\]: 0x00000000   R\[10\]: 0xC94E4629   R\[11\]: 0xFF795E36
+
+### R\[12\]: 0x009CA39D   R\[13\]: 0xFFFFFF98   R\[14\]: 0x00000079   R\[15\]: 0xFFFFFFC7
+
+### R\[16\]: 0x00000040   R\[17\]: 0x00000000   R\[18\]: 0x00000000   R\[19\]: 0x00000000
+
+### R\[20\]: 0x00000000   R\[21\]: 0x00000000   R\[22\]: 0x00000000   R\[23\]: 0x00000000
+
+### R\[24\]: 0x00000000   R\[25\]: 0x00000000   R\[26\]: 0x00000000   R\[27\]: 0x00000000
+
+### R\[28\]: 0x00000000   R\[29\]: 0x00000000   R\[30\]: 0x00000000   R\[31\]: 0x00000000
+
+Registros después del ADD:
+
+### RTM32\> r
+
+### \=== General Purpose Registers \===
+
+### R\[ 0\]: 0x00000000   R\[ 1\]: 0x00000000   R\[ 2\]: 0x00000000   R\[ 3\]: 0x00000000
+
+### R\[ 4\]: 0x01234567   R\[ 5\]: 0x89ABCDEF   R\[ 6\]: 0x00000000   R\[ 7\]: 0x00000000
+
+### R\[ 8\]: 0x00000000   R\[ 9\]: 0x00000000   R\[10\]: 0xC94E4629   R\[11\]: 0xFF795E36
+
+### R\[12\]: 0x009CA39D   R\[13\]: 0xFFFFFF98   R\[14\]: 0x00000079   R\[15\]: 0xFFFFFFC7
+
+### R\[16\]: 0x00000040   R\[17\]: 0x8ACF1356   R\[18\]: 0x00000000   R\[19\]: 0x00000000
+
+### R\[20\]: 0x00000000   R\[21\]: 0x00000000   R\[22\]: 0x00000000   R\[23\]: 0x00000000
+
+### R\[24\]: 0x00000000   R\[25\]: 0x00000000   R\[26\]: 0x00000000   R\[27\]: 0x00000000
+
+### R\[28\]: 0x00000000   R\[29\]: 0x00000000   R\[30\]: 0x00000000   R\[31\]: 0x00000000
+
+### 
+
+### 
+
+# SUB
+
+**Instrucciones:**  
+\* Mnemónico: SUB  
+\* Operadores: rs(registro del 1er valor), rt(registro del 2do valor), rd(registro destino).  
+\* Instrucción específica de prueba: SUB $a1, $a0, $t8 (Resto $a1 con $a0 y guardo el valor en $t8)
+
+**Decodificación a Lenguaje de Máquina (Hexadecimal):**  
+\* **opcode** (bits 31-27): 00000 (Tipo R)  
+\* **rs** (bits 26-22): 00101 (Registro $a1 / Registro 5 \- 1er valor)  
+\* **rt** (bits 21-17): 00100 (Registro $a0 / Registro 4 \- 2do valor)  
+\* **rd** (bits 16-12): 10010 (Registro $t8 / Registro 18 \- registro destino)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **X** (bit 6): 0  
+\* **func** (bits 5-0): 001101 (Código asignado a ADD)
+
+**Combinación binaria:** 0000 0001 0100 1010 0001 0000 0000 1101  
+**Representación hexadecimal final:** 0x0149200D
+
+**Aclaraciones:**  
+\* Fue hecho directamente después de ADD por eso $t0 y $t1 y $t2 y $t3 y $t4 y $t5 y $t6 y $t7 tienen un valor guardado y uso la dirección \[0x28\] en vez de \[0x08\]
+
+**Precondiciones:**  
+\* El registro $a0 (R4) fue cargado con 0x01234567  
+\* El registro $a1 (R5)  fue cargado con 0x89ABCDEF  
+\* El registro $t8 (R18) fue limpiado para que esté en 0x00000000
+
+**Entrada de Código:** s \[0x28\] 0x0149200D
+
+Registros antes de SUB:
+
+### RTM32\> r
+
+### \=== General Purpose Registers \===
+
+### R\[ 0\]: 0x00000000   R\[ 1\]: 0x00000000   R\[ 2\]: 0x00000000   R\[ 3\]: 0x00000000
+
+### R\[ 4\]: 0x01234567   R\[ 5\]: 0x89ABCDEF   R\[ 6\]: 0x00000000   R\[ 7\]: 0x00000000
+
+### R\[ 8\]: 0x00000000   R\[ 9\]: 0x00000000   R\[10\]: 0xC94E4629   R\[11\]: 0xFF795E36
+
+### R\[12\]: 0x009CA39D   R\[13\]: 0xFFFFFF98   R\[14\]: 0x00000079   R\[15\]: 0xFFFFFFC7
+
+### R\[16\]: 0x00000040   R\[17\]: 0x8ACF1356   R\[18\]: 0x00000000   R\[19\]: 0x00000000
+
+### R\[20\]: 0x00000000   R\[21\]: 0x00000000   R\[22\]: 0x00000000   R\[23\]: 0x00000000
+
+### R\[24\]: 0x00000000   R\[25\]: 0x00000000   R\[26\]: 0x00000000   R\[27\]: 0x00000000
+
+### R\[28\]: 0x00000000   R\[29\]: 0x00000000   R\[30\]: 0x00000000   R\[31\]: 0x00000000
+
+Registros después del SUB:
+
+### RTM32\> r
+
+### \=== General Purpose Registers \===
+
+### R\[ 0\]: 0x00000000   R\[ 1\]: 0x00000000   R\[ 2\]: 0x00000000   R\[ 3\]: 0x00000000
+
+### R\[ 4\]: 0x01234567   R\[ 5\]: 0x89ABCDEF   R\[ 6\]: 0x00000000   R\[ 7\]: 0x00000000
+
+### R\[ 8\]: 0x00000000   R\[ 9\]: 0x00000000   R\[10\]: 0xC94E4629   R\[11\]: 0xFF795E36
+
+### R\[12\]: 0x009CA39D   R\[13\]: 0xFFFFFF98   R\[14\]: 0x00000079   R\[15\]: 0xFFFFFFC7
+
+### R\[16\]: 0x00000040   R\[17\]: 0x8ACF1356   R\[18\]: 0x88888888   R\[19\]: 0x00000000
+
+### R\[20\]: 0x00000000   R\[21\]: 0x00000000   R\[22\]: 0x00000000   R\[23\]: 0x00000000
+
+### R\[24\]: 0x00000000   R\[25\]: 0x00000000   R\[26\]: 0x00000000   R\[27\]: 0x00000000
+
+### R\[28\]: 0x00000000   R\[29\]: 0x00000000   R\[30\]: 0x00000000   R\[31\]: 0x00000000
+
+# 
+
 # SLT (Set Less Than) 
 
 **Instrucciones:**  
@@ -695,12 +976,12 @@ Registros después del NOR:
 \* **rs** (bits 26-22): 00100 (Registro $a0 / Registro 4 \- 1er argumento)  
 \* **rt** (bits 21-17): 00101 (Registro $a1 / Registro 5 \- 2do argumento)  
 \* **rd** (bits 16-12): 01010 (Registro $t0 / Registro 10 \- Registro destino del resultado)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
 \* **X** (bit 6): 0  
-\* **func** (bits 5-0): 001100 (Código asignado a SLT)
+\* **func** (bits 5-0): 001110 (Código asignado a SLT)
 
-**Combinación binaria:** 0000 0001 0000 1010 1010 0000 0000 1100  
-**Representación hexadecimal final:** 0x010AA00C
+**Combinación binaria:** 0000 0001 0000 1010 1010 0000 0000 1110  
+**Representación hexadecimal final:** 0x010AA00E
 
 **Precondiciones:**  
 \* El registro $a0 (R4) fue cargado con el valor 0xFFFFFFFF  
@@ -761,12 +1042,12 @@ Registros después del SLT:
 \* **rs** (bits 26-22): 00100 (Registro $a0 / Registro 4 \- 1er argumento)  
 \* **rt** (bits 21-17): 00101 (Registro $a1 / Registro 5 \- 2do argumento)  
 \* **rd** (bits 16-12): 01011 (Registro $t1 / Registro 11 \- Registro destino del resultado)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
 \* **X** (bit 6): 0  
-\* **func** (bits 5-0): 001101 (Código asignado a SLT)
+\* **func** (bits 5-0): 001111 (Código asignado a SLTU)
 
-**Combinación binaria:** 0000 0001 0000 1010 1011 0000 0000 1101  
-**Representación hexadecimal final:** 0x010AB00D
+**Combinación binaria:** 0000 0001 0000 1010 1011 0000 0000 1121  
+**Representación hexadecimal final:** 0x010AB00F
 
 **Aclaraciones:**  
 \* Fue hecho directamente después de SLT por eso $t0 ya tiene un valor cargado
@@ -776,7 +1057,7 @@ Registros después del SLT:
 \* El registro $a1 (R5) fue cargado con el valor 0x00000000  
 \* El registro $t1 (R11) debe inicializarse en 0x00000000 para asegurar que el cambio posterior sea producto de la instrucción y no un residuo de memoria.
 
-**Entrada de Código:**
+**Entrada de Código:** s \[0x00\] 0x010AB00F
 
 Registros antes del SLTU:
 
@@ -830,7 +1111,7 @@ Registros después del SLTU:
 \* **rs** (bits 26-22): 01010 (Registro $t0 / Registro 1 \- Valor que va a tomar PC)  
 \* **rt** (bits 21-17): 00000 (no se usa)  
 \* **rd** (bits 16-12): 00000 (no se usa)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
 \* **X** (bit 6): 0  
 \* **func** (bits 5-0): 001110 (Código asignado a JR)
 
@@ -908,7 +1189,7 @@ Registros después del JR:
 \* **rs** (bits 26-22): 01010 (Registro $t0 / Registro 10 \- Valor que va a tomar PC)  
 \* **rt** (bits 21-17): 00000 (no se usa)  
 \* **rd** (bits 16-12): 01011 (registro donde voy a guardar PC \+ 4\)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
 \* **X** (bit 6): 0  
 \* **func** (bits 5-0): 001111 (Código asignado a JALR)
 
@@ -979,7 +1260,7 @@ Registros después del JR:
 \* **rs** (bits 26-22): 00100 (Registro $a0 / Registro 4 \- 1er valor)  
 \* **rt** (bits 21-17): 00101 (Registro $a1 / Registro 5 \- registro destino)  
 \* **rd** (bits 16-12): 01010 (Registro $t0 / Registro 10 \- 2do valor)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
 \* **X** (bit 6): 0  
 \* **func** (bits 5-0): 010000 (Código asignado a LHX)
 
@@ -1049,7 +1330,7 @@ Registros después de LHX:
 \* **rs** (bits 26-22): 00100 (Registro $a0 / Registro 4 \- 1er valor)  
 \* **rt** (bits 21-17): 00101 (Registro $a1 / Registro 5 \- registro destino)  
 \* **rd** (bits 16-12): 01010 (Registro $t0 / Registro 10 \- 2do valor)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
 \* **X** (bit 6): 0  
 \* **func** (bits 5-0): 010001 (Código asignado a LHUX)
 
@@ -1119,7 +1400,7 @@ Registros después de LHUX:
 \* **rs** (bits 26-22): 00100 (Registro $a0 / Registro 4 \- 1er valor)  
 \* **rt** (bits 21-17): 00101 (Registro $a1 / Registro 5 \- registro destino)  
 \* **rd** (bits 16-12): 01010 (Registro $t0 / Registro 10 \- 2do valor)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
 \* **X** (bit 6): 0  
 \* **func** (bits 5-0): 010011 (Código asignado a LBX)
 
@@ -1190,7 +1471,7 @@ Registros después de LBX:
 \* **rs** (bits 26-22): 00100 (Registro $a0 / Registro 4 \- 1er valor)  
 \* **rt** (bits 21-17): 00101 (Registro $a1 / Registro 5 \- registro destino)  
 \* **rd** (bits 16-12): 01010 (Registro $t0 / Registro 10 \- 2do valor)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
 \* **X** (bit 6): 0  
 \* **func** (bits 5-0): 010011 (Código asignado a LBUX)
 
@@ -1260,7 +1541,7 @@ Registros después de LBUX:
 \* **rs** (bits 26-22): 00100 (Registro $a0 / Registro 4 \- 1er valor)  
 \* **rt** (bits 21-17): 00101 (Registro $a1 / Registro 5 \- registro destino)  
 \* **rd** (bits 16-12): 01010 (Registro $t0 / Registro 10 \- 2do valor)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
 \* **X** (bit 6): 0  
 \* **func** (bits 5-0): 010100 (Código asignado a LWX)
 
@@ -1331,7 +1612,7 @@ Registros después de LWX:
 \* **rs** (bits 26-22): 00100 (Registro $a0 / Registro 4 \- 1er valor)  
 \* **rt** (bits 21-17): 00101 (Registro $a1 / Registro 5 \- 2do valor)  
 \* **rd** (bits 16-12): 01010(Registro $t0 / Registro 10 \- registro destino)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
 \* **X** (bit 6): 0  
 \* **func** (bits 5-0): 010101 (Código asignado a MUL)
 
@@ -1403,7 +1684,7 @@ Registros después del MUL:
 \* **rs** (bits 26-22): 00100 (Registro $a0 / Registro 4 \- 1er valor)  
 \* **rt** (bits 21-17): 00101 (Registro $a1 / Registro 5 \- 2do valor)  
 \* **rd** (bits 16-12): 01011(Registro $t1 / Registro 11 \- registro destino)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
 \* **X** (bit 6): 0  
 \* **func** (bits 5-0): 010110 (Código asignado a MULH)
 
@@ -1476,7 +1757,7 @@ Registros después del MULH:
 \* **rs** (bits 26-22): 00100 (Registro $a0 / Registro 4 \- 1er valor)  
 \* **rt** (bits 21-17): 00101 (Registro $a1 / Registro 5 \- 2do valor)  
 \* **rd** (bits 16-12): 01100 (Registro $t2 / Registro 12 \- registro destino)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
 \* **X** (bit 6): 0  
 \* **func** (bits 5-0): 010111 (Código asignado a MULHU)
 
@@ -1549,7 +1830,7 @@ Registros después del MULHU:
 \* **rs** (bits 26-22): 00101 (Registro $a1 / Registro 5 \- 1er valor)  
 \* **rt** (bits 21-17): 00100 (Registro $a0 / Registro 4 \- 2do valor)  
 \* **rd** (bits 16-12): 01101 (Registro $t3 / Registro 13 \- registro destino)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
 \* **X** (bit 6): 0  
 \* **func** (bits 5-0): 011000 (Código asignado a DIV)
 
@@ -1622,7 +1903,7 @@ Registros después del DIV:
 \* **rs** (bits 26-22): 00101 (Registro $a1 / Registro 5 \- 1er valor)  
 \* **rt** (bits 21-17): 00100 (Registro $a0 / Registro 4 \- 2do valor)  
 \* **rd** (bits 16-12): 01110 (Registro $t4 / Registro 14 \- registro destino)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
 \* **X** (bit 6): 0  
 \* **func** (bits 5-0): 011001 (Código asignado a DIVU)
 
@@ -1697,7 +1978,7 @@ Registros después del DIVU:
 \* **rs** (bits 26-22): 00101 (Registro $a1 / Registro 5 \- 1er valor)  
 \* **rt** (bits 21-17): 00100 (Registro $a0 / Registro 4 \- 2do valor)  
 \* **rd** (bits 16-12): 01111 (Registro $t4 / Registro 15 \- registro destino)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
 \* **X** (bit 6): 0  
 \* **func** (bits 5-0): 011010 (Código asignado a REST)
 
@@ -1770,7 +2051,7 @@ Registros después del REST:
 \* **rs** (bits 26-22): 00101 (Registro $a1 / Registro 5 \- 1er valor)  
 \* **rt** (bits 21-17): 00100 (Registro $a0 / Registro 4 \- 2do valor)  
 \* **rd** (bits 16-12): 10000 (Registro $t6 / Registro 16 \- registro destino)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
+\* **param** (bits 11-7): 00000 (No se utiliza en este formato)  
 \* **X** (bit 6): 0  
 \* **func** (bits 5-0): 011011 (Código asignado a RESTU)
 
@@ -1824,156 +2105,6 @@ Registros después del RESTU:
 ### R\[12\]: 0x009CA39D   R\[13\]: 0xFFFFFF98   R\[14\]: 0x00000079   R\[15\]: 0xFFFFFFC7
 
 ### R\[16\]: 0x00000040   R\[17\]: 0x00000000   R\[18\]: 0x00000000   R\[19\]: 0x00000000
-
-### R\[20\]: 0x00000000   R\[21\]: 0x00000000   R\[22\]: 0x00000000   R\[23\]: 0x00000000
-
-### R\[24\]: 0x00000000   R\[25\]: 0x00000000   R\[26\]: 0x00000000   R\[27\]: 0x00000000
-
-### R\[28\]: 0x00000000   R\[29\]: 0x00000000   R\[30\]: 0x00000000   R\[31\]: 0x00000000
-
-# ADD 
-
-**Instrucciones:**  
-\* Mnemónico: ADD  
-\* Operadores: rs(registro del 1er valor), rt(registro del 2do valor), rd(registro destino).  
-\* Instrucción específica de prueba: ADD $a1, $a0, $t7 (Suma $a1 con $a0 y guardo el valor en $t7)
-
-**Decodificación a Lenguaje de Máquina (Hexadecimal):**  
-\* **opcode** (bits 31-27): 00000 (Tipo R)  
-\* **rs** (bits 26-22): 00101 (Registro $a1 / Registro 5 \- 1er valor)  
-\* **rt** (bits 21-17): 00100 (Registro $a0 / Registro 4 \- 2do valor)  
-\* **rd** (bits 16-12): 10001 (Registro $t7 / Registro 17 \- registro destino)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
-\* **X** (bit 6): 0  
-\* **func** (bits 5-0): 011100 (Código asignado a ADD)
-
-**Combinación binaria:** 0000 0001 0100 1001 0001 0000 0001 1100  
-**Representación hexadecimal final:** 0x0149101C
-
-**Aclaraciones:**  
-\* Fue hecho directamente después de RESTU por eso $t0 y $t1 y $t2 y $t3 y $t4 y $t5 y $t6 tienen un valor guardado y uso la dirección \[0x24\] en vez de \[0x08\]
-
-**Precondiciones:**  
-\* El registro $a0 (R4) fue cargado con 0x01234567  
-\* El registro $a1 (R5)  fue cargado con 0x89ABCDEF  
-\* El registro $t7 (R17) fue limpiado para que esté en 0x00000000
-
-**Entrada de Código:** s \[0x24\] 0x0149101C
-
-Registros antes de ADD:
-
-### RTM32\> r
-
-### \=== General Purpose Registers \===
-
-### R\[ 0\]: 0x00000000   R\[ 1\]: 0x00000000   R\[ 2\]: 0x00000000   R\[ 3\]: 0x00000000
-
-### R\[ 4\]: 0x01234567   R\[ 5\]: 0x89ABCDEF   R\[ 6\]: 0x00000000   R\[ 7\]: 0x00000000
-
-### R\[ 8\]: 0x00000000   R\[ 9\]: 0x00000000   R\[10\]: 0xC94E4629   R\[11\]: 0xFF795E36
-
-### R\[12\]: 0x009CA39D   R\[13\]: 0xFFFFFF98   R\[14\]: 0x00000079   R\[15\]: 0xFFFFFFC7
-
-### R\[16\]: 0x00000040   R\[17\]: 0x00000000   R\[18\]: 0x00000000   R\[19\]: 0x00000000
-
-### R\[20\]: 0x00000000   R\[21\]: 0x00000000   R\[22\]: 0x00000000   R\[23\]: 0x00000000
-
-### R\[24\]: 0x00000000   R\[25\]: 0x00000000   R\[26\]: 0x00000000   R\[27\]: 0x00000000
-
-### R\[28\]: 0x00000000   R\[29\]: 0x00000000   R\[30\]: 0x00000000   R\[31\]: 0x00000000
-
-Registros después del ADD:
-
-### RTM32\> r
-
-### \=== General Purpose Registers \===
-
-### R\[ 0\]: 0x00000000   R\[ 1\]: 0x00000000   R\[ 2\]: 0x00000000   R\[ 3\]: 0x00000000
-
-### R\[ 4\]: 0x01234567   R\[ 5\]: 0x89ABCDEF   R\[ 6\]: 0x00000000   R\[ 7\]: 0x00000000
-
-### R\[ 8\]: 0x00000000   R\[ 9\]: 0x00000000   R\[10\]: 0xC94E4629   R\[11\]: 0xFF795E36
-
-### R\[12\]: 0x009CA39D   R\[13\]: 0xFFFFFF98   R\[14\]: 0x00000079   R\[15\]: 0xFFFFFFC7
-
-### R\[16\]: 0x00000040   R\[17\]: 0x8ACF1356   R\[18\]: 0x00000000   R\[19\]: 0x00000000
-
-### R\[20\]: 0x00000000   R\[21\]: 0x00000000   R\[22\]: 0x00000000   R\[23\]: 0x00000000
-
-### R\[24\]: 0x00000000   R\[25\]: 0x00000000   R\[26\]: 0x00000000   R\[27\]: 0x00000000
-
-### R\[28\]: 0x00000000   R\[29\]: 0x00000000   R\[30\]: 0x00000000   R\[31\]: 0x00000000
-
-### 
-
-### 
-
-# SUB
-
-**Instrucciones:**  
-\* Mnemónico: SUB  
-\* Operadores: rs(registro del 1er valor), rt(registro del 2do valor), rd(registro destino).  
-\* Instrucción específica de prueba: SUB $a1, $a0, $t8 (Resto $a1 con $a0 y guardo el valor en $t8)
-
-**Decodificación a Lenguaje de Máquina (Hexadecimal):**  
-\* **opcode** (bits 31-27): 00000 (Tipo R)  
-\* **rs** (bits 26-22): 00101 (Registro $a1 / Registro 5 \- 1er valor)  
-\* **rt** (bits 21-17): 00100 (Registro $a0 / Registro 4 \- 2do valor)  
-\* **rd** (bits 16-12): 10010 (Registro $t8 / Registro 18 \- registro destino)  
-\* **aux** (bits 11-7): 00000 (No se utiliza en este formato)  
-\* **X** (bit 6): 0  
-\* **func** (bits 5-0): 011101 (Código asignado a ADD)
-
-**Combinación binaria:** 0000 0001 0100 1010 0001 0000 0001 1101  
-**Representación hexadecimal final:** 0x0149201D
-
-**Aclaraciones:**  
-\* Fue hecho directamente después de ADD por eso $t0 y $t1 y $t2 y $t3 y $t4 y $t5 y $t6 y $t7 tienen un valor guardado y uso la dirección \[0x28\] en vez de \[0x08\]
-
-**Precondiciones:**  
-\* El registro $a0 (R4) fue cargado con 0x01234567  
-\* El registro $a1 (R5)  fue cargado con 0x89ABCDEF  
-\* El registro $t8 (R18) fue limpiado para que esté en 0x00000000
-
-**Entrada de Código:** s \[0x28\] 0x0149201D
-
-Registros antes de SUB:
-
-### RTM32\> r
-
-### \=== General Purpose Registers \===
-
-### R\[ 0\]: 0x00000000   R\[ 1\]: 0x00000000   R\[ 2\]: 0x00000000   R\[ 3\]: 0x00000000
-
-### R\[ 4\]: 0x01234567   R\[ 5\]: 0x89ABCDEF   R\[ 6\]: 0x00000000   R\[ 7\]: 0x00000000
-
-### R\[ 8\]: 0x00000000   R\[ 9\]: 0x00000000   R\[10\]: 0xC94E4629   R\[11\]: 0xFF795E36
-
-### R\[12\]: 0x009CA39D   R\[13\]: 0xFFFFFF98   R\[14\]: 0x00000079   R\[15\]: 0xFFFFFFC7
-
-### R\[16\]: 0x00000040   R\[17\]: 0x8ACF1356   R\[18\]: 0x00000000   R\[19\]: 0x00000000
-
-### R\[20\]: 0x00000000   R\[21\]: 0x00000000   R\[22\]: 0x00000000   R\[23\]: 0x00000000
-
-### R\[24\]: 0x00000000   R\[25\]: 0x00000000   R\[26\]: 0x00000000   R\[27\]: 0x00000000
-
-### R\[28\]: 0x00000000   R\[29\]: 0x00000000   R\[30\]: 0x00000000   R\[31\]: 0x00000000
-
-Registros después del SUB:
-
-### RTM32\> r
-
-### \=== General Purpose Registers \===
-
-### R\[ 0\]: 0x00000000   R\[ 1\]: 0x00000000   R\[ 2\]: 0x00000000   R\[ 3\]: 0x00000000
-
-### R\[ 4\]: 0x01234567   R\[ 5\]: 0x89ABCDEF   R\[ 6\]: 0x00000000   R\[ 7\]: 0x00000000
-
-### R\[ 8\]: 0x00000000   R\[ 9\]: 0x00000000   R\[10\]: 0xC94E4629   R\[11\]: 0xFF795E36
-
-### R\[12\]: 0x009CA39D   R\[13\]: 0xFFFFFF98   R\[14\]: 0x00000079   R\[15\]: 0xFFFFFFC7
-
-### R\[16\]: 0x00000040   R\[17\]: 0x8ACF1356   R\[18\]: 0x88888888   R\[19\]: 0x00000000
 
 ### R\[20\]: 0x00000000   R\[21\]: 0x00000000   R\[22\]: 0x00000000   R\[23\]: 0x00000000
 
