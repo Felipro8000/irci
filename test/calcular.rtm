@@ -1,0 +1,17 @@
+.section ".text"
+
+main:
+    addi $t0, $zero, 1      // $t0 = contador (inicia en 1)
+    addi $t1, $zero, 0      // $t1 = acumulador (inicia en 0)
+    addi $t2, $zero, 11     // $t2 = limite (11)
+
+bucle_sumar:
+    beq  $t0, $t2, fin      // Si el contador llega a 11, sale del bucle
+
+    add  $t1, $t1, $t0      // suma = suma + contador
+    addi $t0, $t0, 1        // contador++
+
+    j    bucle_sumar
+
+fin:
+    j fin
