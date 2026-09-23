@@ -1,17 +1,93 @@
 .section ".text"
 
 main:
+
+// 1. Inicializamos el puntero de pila (Stack Pointer) necesario para print32u
+    addi $sp, $zero, 0xFFC
+
     addi $t0, $zero, 1      // $t0 = contador (inicia en 1)
     addi $t1, $zero, 0      // $t1 = acumulador (inicia en 0)
     addi $t2, $zero, 11     // $t2 = limite (11)
 
 bucle_sumar:
-    beq  $t0, $t2, fin      // Si el contador llega a 11, sale del bucle
+    beq  $t0, $t2, imprimir      // Si el contador llega a 11, sale del bucle
 
     add  $t1, $t1, $t0      // suma = suma + contador
     addi $t0, $t0, 1        // contador++
 
     j    bucle_sumar
+imprimir:
+    // 3. Copiamos el resultado ($t1 = 55) a $a0 para pasarlo como argumento
+    addi $a0, $t1, 0
 
-fin:
-    j fin
+    // 4. Llamamos a la función de impresión
+    jal  print32u
+
+halt:
+    // Bucle para finalizar limpiamente la ejecución en el emulador
+    j    halt
+
+print32u:
+    addi $sp, $sp, -8
+    sw   $s0, 0($sp)
+    sw   $s1, 4($sp)
+
+    // $s0 <- $a0 (valor a imprimir)
+    // $s1 <- contador de dígitos apilados
+    addi $s0, $a0, 0
+    xor  $s1, $s1, $s1
+
+    addi $t0, $zero, 10
+    addi $t2, $zero, -0x100 // Dirección MMIO de la consola (0xFFFFFF00)
+
+    // Si el valor es 0, se imprime directo '0'
+    bne  $a0, $zero, print32u_apilar
+
+    addi $t1, $zero, '0'
+    sb   $t1, 0($t2)
+    j    print32u_salir
+
+print32u_apilar:
+    beq  $s0, $zero, print32u_desapilar
+
+    addi $s1, $s1, 1
+
+    // Extrae el dígito actual (módulo 10) con la instrucción restu
+    restu $t1, $s0, $t0
+
+    // Resta el residuo y divide entre 10
+    sub  $s0, $s0, $t1
+    divu $s0, $s0, $t0
+
+    // Convierte el dígito a su carácter ASCII y lo guarda en la pila
+    addi $t1, $t1, '0'
+    addi $sp, $sp, -1
+    sb   $t1, 0($sp)
+
+    j    print32u_apilar
+
+print32u_desapilar:
+    beq  $s1, $zero, print32u_salir
+
+    // Saca el carácter de la pila y lo envía a la consola
+    lbu  $t1, 0($sp)
+    sb   $t1, 0($t2)
+
+    // Decrementa el contador y ajusta el stack
+    addi $s1, $s1, -1
+    addi $sp, $sp, 1
+
+    j    print32u_desapilar
+
+print32u_salir:
+    // Imprime un espacio final tras el número
+    addi $t1, $zero, ' '
+    sb   $t1, 0($t2)
+
+    // Restaura registros y retorna
+    lw   $s0, 0($sp)
+    lw   $s1, 4($sp)
+    addi $sp, $sp, 8
+    jr   $ra, 0
+
+.section ".data"
